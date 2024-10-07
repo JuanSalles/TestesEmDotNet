@@ -2,10 +2,10 @@ using JornadaMilhasV1.Modelos;
 
 namespace JornadaMilhas.Testç
 {
-    public class OfertaViagemTest
+    public class OfertaViagemConstrutor
     {
         [Fact]
-        public void TestandoOfertaValida()
+        public void RetornaOfertaValidaQuandoDadosValidos()
         {
             //Arrange
             Rota rota = new("Salvador", "Rio de Janeiro");
@@ -21,7 +21,7 @@ namespace JornadaMilhas.Testç
         }
 
         [Fact]
-        public void TestandoOfertaComRotaNula()
+        public void RetornaMensagemDeErroDeRotaOuPeriodoInvalidosQuandoARotaForNula()
         {
             Rota rota = null;
             Periodo periodo = new(DateTime.Now, DateTime.Now.AddDays(1));
@@ -35,7 +35,7 @@ namespace JornadaMilhas.Testç
         }
 
         [Fact]
-        public void TestandoPeriodoComFinalMaiorQueInicial()
+        public void RetornaMensagemDeErroDePeriodoInvalidoQuandoADataDeIdaForMaiorQueADataDeVolta()
         {
             //Arrange
             Rota rota = new("Salvador", "Rio de Janeiro");
@@ -48,6 +48,23 @@ namespace JornadaMilhas.Testç
 
             //Assert
             Assert.Contains("Erro: Data de ida não pode ser maior que a data de volta.", oferta.Erros.Sumario);
+
+            Assert.False(oferta.EhValido);
+        }
+
+        [Fact]
+        public void RetornaMensagemDeErroDePrecoInvalidoQuandoPrecoMenorQueZero()
+        {
+            //Arrange
+            Rota rota = new("Salvador", "Rio de Janeiro");
+            Periodo periodo = new(DateTime.Now, DateTime.Now.AddDays(1));
+            double preco = -100.0;
+
+            //Act
+            OfertaViagem oferta = new(rota, periodo, preco);
+
+            //Assert
+            Assert.Contains("O preço da oferta de viagem deve ser maior que zero.", oferta.Erros.Sumario);
 
             Assert.False(oferta.EhValido);
         }
